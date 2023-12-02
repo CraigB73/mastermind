@@ -49,7 +49,16 @@ def random_generated_code(difficulty, code_charters):
     except ValueError as e:
         print(e)
 
+def get_player_guess():
+    """
+    Gets players guess towards the hidden code.
+    """     
+    player_input = str(input("Enter your guess here: ").upper())
+    string_list = player_input.split(",")
+    return PLAYER_GUESS.extend(string_list)
+
                     
 difficulty = get_difficulty_input()
 code = random_generated_code(difficulty, CODE_LIST)
 print(difficulty, code)  
+get_guess_input()
