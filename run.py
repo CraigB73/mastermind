@@ -1,7 +1,6 @@
 import random
-
+from collections import Counter
 CODE_LIST = ['Z', 'X', 'C', 'V', 'B']
-PLAYER_GUESS = []
 
 print()
 print("You will be given 10 tries.\n")
@@ -29,9 +28,9 @@ def get_difficulty_input():
         except ValueError as e:
             print(e)
 
-def random_generated_code(difficulty, code_charters):
+def secret_generated_code(difficulty, code_charters):
     """
-    Generates random game code depending difficulty input by player.
+    Generates random secret game code depending difficulty input by player.
     Checks the value of difficulty input inorder to create random game code.   
     """
     
@@ -48,23 +47,56 @@ def random_generated_code(difficulty, code_charters):
             raise ValueError("Invalid difficulty level. Check that you have entered correct value")
     except ValueError as e:
         print(e)
-
+        
+player_guess = []
 def get_player_guess():
     """
     Gets players guess towards the hidden code.
     """
-         
+    global player_guess     
     player_input = str(input("Enter your guess here: ").upper())
     string_list = player_input.split(",")
-    PLAYER_GUESS.extend(string_list)
-    return PLAYER_GUESS
+    player_guess.extend(string_list)
+    return player_guess
 
 
-                    
+   
+def guess_calculate(random_secret_code, player_guess):
+
+    secret_code_counter = Counter(random_secret_code)
+    player_guess_counter = Counter(player_guess)
+    
+    common_values = secret_code_counter & player_guess_counter
+     
+    total_values = sum(common_values.values())
+    
+    correct_posititons = sum(1 for s,p in zip(random_secret_code, player_guess) if s == p)
+    
+    common_values = total_values - correct_posititons
+    
+    message = (f'Number of correct placements {correct_posititons}', f'Number of correct letters {common_values}' )
+    (a, b) = message
+    print(a, b)
+
+random_game_code = []                
 difficulty = get_difficulty_input()
-code = random_generated_code(difficulty, CODE_LIST)
- 
-player_code = get_player_guess()
+code = secret_generated_code(difficulty, CODE_LIST)
+if code:
+    random_game_code.extend(code)
+    print(code) 
+get_player_guess()
 print(difficulty)
-print(code)
-print(player_code) 
+
+print(f'randomCode:  {random_game_code}\n', f'playerGuess: {player_guess}')
+guess_calculate(random_game_code, player_guess)
+
+#  game_code = Counter(random_code)
+#     player_guess = Counter(player_code)
+    
+#     compare_code = game_code & player_guess
+    
+#     total = sum(compare_code.values())
+
+    
+#     if total > 0:
+#         print("TOTAL", total)
