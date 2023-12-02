@@ -70,14 +70,17 @@ def guess_calculate(random_secret_code, player_guess):
      
     total_values = sum(common_values.values())
     
-    correct_posititons = sum(1 for s,p in zip(random_secret_code, player_guess) if s == p)
-    
+    zip_iterator = zip(random_secret_code, player_guess) 
+    correct_posititons = sum(1 for sc, pg in zip_iterator if sc == pg)
+    correct_values = sum(min(secret_code_counter[values], player_guess_counter[values]) for values in common_values)
+
     common_values = total_values - correct_posititons
     
-    message = (f'Number of correct placements {correct_posititons}', f'Number of correct letters {common_values}' )
+    message = (f'Number of correct placements {correct_posititons}', f'Number of correct letters {correct_values}' )
     (a, b) = message
     print(a, b)
-
+    
+    
 random_game_code = []                
 difficulty = get_difficulty_input()
 code = secret_generated_code(difficulty, CODE_LIST)
