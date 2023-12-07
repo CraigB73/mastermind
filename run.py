@@ -1,15 +1,17 @@
 import random
-from collections import Counter
-CODE_LIST = ['Z', 'X', 'C', 'V', 'B']
 
-print()
-print("You will be given 10 tries.\n")
-print("A max of 5 letters to choose from.")
-print("Letters are located on the last row of the keyboard starting with: z, x, c, v, and b.\n")
-print('Your entries are not case sensitive.')
-print('When entering you code make sure you have no empty spaces after the comma ex:(y,y, , )\n')
-print('Crack the code before you run out of tries to become a "Mastermind."\n\n')
-print("To start the game. Enter your difficulty: Easy, Normal, or Expert\n")
+CODE_LIST = ['Z', 'X', 'C', 'V', 'B']
+player_guess = []
+
+def game_instruction():
+    print()
+    print("You will be given 10 tries.\n")
+    print("A max of 5 letters to choose from.")
+    print("Letters are located on the last row of the keyboard starting with: z, x, c, v, and b.\n")
+    print('Your entries are not case sensitive.')
+    print('When entering you code make sure you have no empty spaces after the comma ex:(z,x,c,v )\n')
+    print('Crack the code before you run out of tries to become a "Mastermind."\n')
+    print("To start the game. Enter your difficulty: Easy, Normal, or Expert\n")
 
 def get_difficulty_input():
     """
@@ -18,24 +20,27 @@ def get_difficulty_input():
     """
     level_values = ['easy', 'normal', 'expert']
     while True:
-        player_input = str(input(f"Enter you difficulty level: \n"))
+        player_input = str(input(f"Enter you difficulty level: "))
         try:
             if player_input.lower() in level_values:
-
+                
                 return player_input.lower()
             else:
                 raise ValueError(f'Make sure to enter: easy, normal, or expert.\n')
         except ValueError as e:
             print(e)
 
-def secret_generated_code(difficulty, code_charters):
+    
+
+def secret_generated_code(difficulty):
     """
     Generates random secret game code depending difficulty input by player.
     Checks the value of difficulty input inorder to create random game code.
     """
-
-    generated_code = [random.choice(code_charters) for _ in range(len(code_charters))] # Generates a random code from
-
+    local_code_list = CODE_LIST
+    # Generates a random code with length depending on difficulty
+    generated_code = [random.choice(local_code_list) for _ in range(len(local_code_list))] 
+    
     try:
         if difficulty == 'easy':
             return generated_code[: len(generated_code) - 2]
@@ -48,24 +53,25 @@ def secret_generated_code(difficulty, code_charters):
     except ValueError as e:
         print(e)
 
-player_guess = []
+
 def get_player_guess():
     """
     Gets players guess towards the hidden code.
     """
     global player_guess
+
     player_input = str(input("Enter your guess here: ").upper())
     string_list = player_input.split(",")
-    player_guess.extend(string_list)
-    
-    if guess_input_validation(string_list, difficulty, CODE_LIST):
+    player_guess = string_list
+
+    if guess_input_validation(string_list, difficulty):
         return player_guess
 
-def guess_input_validation(players_guess, difficulty, code_charaters):
+def guess_input_validation(players_guess, difficulty):
     """
     Validates player input against computers generate game code.
     Validates player has entered only the lettes available to the game.
-    Validates that the list length is equal to chosen diffculty.
+    Validates that the list length is equal to chosen diffculty level.
     """
     Message = {
         "easy": 3,
@@ -73,80 +79,89 @@ def guess_input_validation(players_guess, difficulty, code_charaters):
         "expert": 5
     }
 
-    guess = players_guess
-
-    for msg in Message: # Loops over the Message dictionary 
+    local_code_list = CODE_LIST
+    player_guess = players_guess
+    for msg in Message:
         if difficulty == msg:
             number = Message[msg]
             try:
-                for char in guess:
-                    if char not in code_charaters:
+                for char in player_guess:
+                    if char not in local_code_list:
                         raise TypeError
             except TypeError as e:
                 print(f'{e} You can only enter the letters: Z, X, C, V, and B!\n')
-                return False, get_player_guess()
+                return get_player_guess()
             try:
-                if len(guess) != int(number):
+                if len(player_guess) != int(number):
                     raise ValueError
             except ValueError as e:
-                print(f'{e} For your code to work you need to enter {number} code letters!')
-                return False, get_player_guess()
+                print(f'{e} For your code to work you need to enter a {number} letters code!')
+                return get_player_guess()
+
             return True
-        
-def player_guess_check(random_secret_code, player_guess):
+
+def total_letters(secret_code, player_guess):
     """
-    Checks player's guess against the computer secret code.
-    Updates the number of correct letters in the correct postion.
+    Checks player's guess against secret code
+    using imported Counter() module.
+    Updates the number of letters in the correct index.
     Updates the number oc correct letters of the player's guess.
     """
-    secret_code_counter = Counter(random_secret_code)
-    player_guess_counter = Counter(player_guess)
 
-    common_values = secret_code_counter & player_guess_counter
-    # total_values = sum(common_values.values())
+    total_letters = 0
+    total_matching = 0
+   
+    for a, b in zip(secret_code, player_guess):
+        if a == b:
+            total_matching += 1
+    
+        if a in player_guess:
+            total_letters += 1
 
+    if total_letters > 1:
+        letter_plural = 'letters'
+    else:
+        letter_plural = 'letter'
+        
+    print(f'You have {total_matching} {letter_plural} in the correct position and {total_letters} correct {letter_plural} in your guess!')
+    
+    return total_letters, total_matching 
+   
+def updates_tries_left(secret_code):
+    """
+    Updates the number of tries remaining after each guess has been entered.
+    """
+    try_count = 10
+    if try_count > 1:
+        guess_plural = 'guesses'
+    else:
+        guess_plural = 'guess'
+    while try_count > 0:
+        player_guess = get_player_guess()
+        total_letters(secret_code, player_guess)
 
-    zip_iterator = zip(random_secret_code, player_guess)
-    # Gets total of compared values in an object of tuples if they are of equal value.
-    correct_posititons = sum(1 for secret, guess in zip_iterator if secret == guess)
+        if player_guess == secret_code:
+            try_count -= 1
+            print(f'You cracked the code: {secret_code} in {try_count} {guess_plural} 😄')
+            break
+        else:
+            
+            try_count -= 1
+            print(f'{try_count} {guess_plural} left!')
+            print(f'Last guess { player_guess}')
+            player_guess.clear()
 
-    #Gets the minimum values between sec_code_counter and player_guess_counter values.
-    correct_values = sum(min(secret_code_counter[values], player_guess_counter[values]) for values in common_values)
+    else:
+        print('Out of guesses 🎆 💣 🤯. Better luck next time!')
+        raise RuntimeError
+ 
 
-    #Subtracts
-    # common_values = total_values - correct_posititons
-
-    message = (f'Number of correct placements {correct_posititons}\n', f'Number of correct letters {correct_values}' )
-    (a, b) = message
-    print(a, b)
-
-
-
-# Define a variable to store the previous feedback
-previous_totals = None
-
-def check_guess_gamecode(player_code):
-    global previous_totals
-
-    # Calculate the feedback for the current player guess
-    feedback = player_guess_check(random_game_code, player_code)
-
-    # If there is previous feedback, print it
-    if previous_totals is not None:
-        print("PREVIOUS FEEDBACK:", previous_totals)
-
-    # Print the current feedback
-    print("CURRENT FEEDBACK:", feedback)
-
-    # Update the previous_feedback for the next iteration
-    previous_totals= feedback
-
-random_game_code = []
+game_instruction()
 difficulty = get_difficulty_input()
-code = secret_generated_code(difficulty, CODE_LIST)
-if code:
-    random_game_code.extend(code)
-    print(code)
-get_player_guess()
-check_guess_gamecode(player_guess)
-print(f'randomCode:  {random_game_code}\n', f'playerGuess: {player_guess}')
+def main():
+    global difficulty    
+    secret_code = secret_generated_code(difficulty)
+    if secret_code:
+        print(secret_code)
+        updates_tries_left(secret_code)
+main()
