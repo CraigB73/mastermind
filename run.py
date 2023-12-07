@@ -115,16 +115,19 @@ def total_letters(secret_code, player_guess):
         if a == b:
             total_matching += 1
     
-        if a in player_guess:
+        if b in secret_code:
             total_letters += 1
 
     if total_letters > 1:
         letter_plural = 'letters'
     else:
         letter_plural = 'letter'
-        
-    print(f'You have {total_matching} {letter_plural} in the correct position and {total_letters} correct {letter_plural} in your guess!')
     
+    if secret_code != player_guess:    
+        print(f'You have {total_matching} {letter_plural} in the correct position and {total_letters} correct {letter_plural} in your guess!')
+    else:
+        print()
+        
     return total_letters, total_matching 
    
 def updates_tries_left(secret_code):
@@ -142,7 +145,7 @@ def updates_tries_left(secret_code):
 
         if player_guess == secret_code:
             try_count -= 1
-            print(f'You cracked the code: {secret_code} in {try_count} {guess_plural} 😄')
+            print(f'Great job you cracked the code: {", ".join(secret_code)} in {try_count} {guess_plural} 😄')
             break
         else:
             
