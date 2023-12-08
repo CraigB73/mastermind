@@ -110,13 +110,16 @@ def total_letters(secret_code, player_guess):
 
     total_letters = 0
     total_matching = 0
-   
+    # This code was modified from ChatGBT to solve the problem with totaling the correct number of guessed letters
+    remaining_occurrences = {letter: secret_code.count(letter) for letter in secret_code}
+
     for a, b in zip(secret_code, player_guess):
         if a == b:
             total_matching += 1
-    
-        if b in secret_code:
+        
+        if b in secret_code and remaining_occurrences[b] > 0:
             total_letters += 1
+            remaining_occurrences[b] -= 1
 
     if total_letters > 1:
         letter_plural = 'letters'
@@ -145,7 +148,7 @@ def updates_tries_left(secret_code):
 
         if player_guess == secret_code:
             try_count -= 1
-            print(f'Great job you cracked the code: {", ".join(secret_code)} in {try_count} {guess_plural} 😄')
+            print(f'Great job you cracked the code: {", ".join(secret_code)} in {10 - try_count } {guess_plural} 😄')
             break
         else:
             
