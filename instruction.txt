@@ -1,0 +1,11 @@
+
+- You have 10 tries.
+- Start by entering your difficulty: 
+    * Easy(3 letters) 
+    * Normal(4 letters) 
+    * Expert(5 letters)
+- A random secret code will be created using the letters:
+    * Z, X, C, V, B
+- Your entries are not case sensitiv so go nuts on lower or uppcase.
+- When entering your code leave no empty spaces before or after the comma ex:(z,x,c,v ).
+- Crack the code before you run out of tries and you're a "Mastermind".

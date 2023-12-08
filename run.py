@@ -1,17 +1,21 @@
 import random
+from art import *
+from colored import fore,fg, attr, stylize,  back, style
 
 CODE_LIST = ['Z', 'X', 'C', 'V', 'B']
 player_guess = []
 
+
 def game_instruction():
-    print()
-    print("You will be given 10 tries.\n")
-    print("A max of 5 letters to choose from.")
-    print("Letters are located on the last row of the keyboard starting with: z, x, c, v, and b.\n")
-    print('Your entries are not case sensitive.')
-    print('When entering you code make sure you have no empty spaces after the comma ex:(z,x,c,v )\n')
-    print('Crack the code before you run out of tries to become a "Mastermind."\n')
-    print("To start the game. Enter your difficulty: Easy, Normal, or Expert\n")
+    """
+    Converts game logo to ACSII and print to console.
+    Displays game instuctions.
+    """
+    logo = text2art("MASTERMIND!", chr_ignore= True)
+    print(logo)
+    game_text = open("instruction.txt", "r")
+    print(game_text.read())
+    game_text.close()
 
 def get_difficulty_input():
     """
@@ -20,7 +24,8 @@ def get_difficulty_input():
     """
     level_values = ['easy', 'normal', 'expert']
     while True:
-        player_input = str(input(f"Enter you difficulty level: "))
+        input_message = "Enter you difficulty level: "
+        player_input = str(input(stylize(input_message, fg("green"))))
         try:
             if player_input.lower() in level_values:
                 
@@ -59,8 +64,8 @@ def get_player_guess():
     Gets players guess towards the hidden code.
     """
     global player_guess
-
-    player_input = str(input("Enter your guess here: ").upper())
+    input_message = "Enter your guess here: "
+    player_input = str(input(stylize(input_message, fg('yellow'))).upper())
     string_list = player_input.split(",")
     player_guess = string_list
 
@@ -151,9 +156,9 @@ def updates_tries_left(secret_code):
             print(f'Great job you cracked the code: {", ".join(secret_code)} in {10 - try_count } {guess_plural} 😄')
             break
         else:
-            
+            count_left_msg = f'{try_count} {guess_plural} left!'
             try_count -= 1
-            print(f'{try_count} {guess_plural} left!')
+            print(stylize(count_left_msg, fg("red")))
             print(f'Last guess { player_guess}')
             player_guess.clear()
 
