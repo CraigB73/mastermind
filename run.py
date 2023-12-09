@@ -1,6 +1,6 @@
 import random
 from art import text2art
-from colored import  fg, bg, stylize
+from colored import fg, bg, stylize
 
 CODE_LIST = ['Z', 'X', 'C', 'V', 'B']
 player_guess = []
@@ -11,14 +11,15 @@ def game_instruction():
     Converts game logo to ACSII and print to console.
     Displays game instuctions.
     """
-    logo = text2art("MASTERMIND!", chr_ignore= True)
     print()
+    logo = text2art("MASTERMIND!", chr_ignore=True)
     print('WELCOME to:')
-    print(logo)
+    print(stylize(logo, fg('cyan_1')))
     game_text = open("instruction.txt", "r")
-    game_text 
+    game_text
     print(game_text.read())
     game_text.close()
+
 
 def get_difficulty_input():
     """
@@ -26,20 +27,26 @@ def get_difficulty_input():
     Performs check to ensure player input is one of three choices.
     """
     level_values = ['easy', 'normal', 'expert']
+
     while True:
         input_message = "Enter you difficulty level: "
         player_input = str(input(stylize(input_message, fg("green"))))
+
         try:
             if player_input.lower() in level_values:
-                
+                message = f"Difficlty level: {player_input.capitalize()}"
+                print(stylize(message, fg('blue')))
+
                 return player_input.lower()
             else:
-                value_error_msg ="Make sure to enter: easy, normal, or expert.\n"
-                raise ValueError(stylize(value_error_msg, bg('red')))
+                value_error_msg = (
+                    "Make sure to enter: easy, normal, or expert.\n"
+                )
+                raise ValueError(stylize(value_error_msg, bg('yellow')))
+
         except ValueError as e:
             print(e)
 
-    
 
 def secret_generated_code(difficulty):
     """
@@ -48,8 +55,10 @@ def secret_generated_code(difficulty):
     """
     local_code_list = CODE_LIST
     # Generates a random code with length depending on difficulty
-    generated_code = [random.choice(local_code_list) for _ in range(len(local_code_list))] 
-    
+    generated_code = [
+        random.choice(local_code_list) for _ in range(len(local_code_list))
+    ]
+
     try:
         if difficulty == 'easy':
             return generated_code[: len(generated_code) - 2]
@@ -58,18 +67,21 @@ def secret_generated_code(difficulty):
         elif difficulty == 'expert':
             return generated_code
         else:
-            value_error_msg = "Invalid difficulty level. Check that you have entered correct value"
+            value_error_msg = (
+                "Invalid difficulty level."
+            )
             raise ValueError(stylize(value_error_msg, bg('red')))
+
     except ValueError as e:
         print(e)
 
 
 def get_player_guess():
     """
-    Gets players guess towards the hidden code.
+    Gets and returns player secret code guess.
     """
     global player_guess
-    
+
     input_message = "Enter your guess here: "
     player_input = str(input(stylize(input_message, fg('yellow'))).upper())
     string_list = player_input.split(",")
@@ -77,6 +89,7 @@ def get_player_guess():
 
     if guess_input_validation(string_list, difficulty):
         return player_guess
+
 
 def guess_input_validation(players_guess, difficulty):
     """
@@ -95,23 +108,29 @@ def guess_input_validation(players_guess, difficulty):
     for msg in Message:
         if difficulty == msg:
             number = Message[msg]
+
             try:
                 for char in player_guess:
                     if char not in local_code_list:
                         raise TypeError
             except TypeError as e:
-                value_error_msg = f"{e} You can only enter the letters: Z, X, C, V, and B!\n"
+                value_error_msg = (
+                    f"{e} You can only enter the letters: Z, X, C, V, and B!\n"
+                )
                 print(stylize(value_error_msg, bg('red')))
                 return get_player_guess()
             try:
                 if len(player_guess) != int(number):
                     raise ValueError
             except ValueError as e:
-                number_error = f'{e} For your code to work you need to enter a {number} letters code!'
+                number_error = (
+                    f'{e} You code needs to be {number} letters code!'
+                )
                 print(stylize(number_error, bg("red")))
                 return get_player_guess()
 
             return True
+
 
 def total_letters(secret_code, player_guess):
     """
@@ -123,70 +142,112 @@ def total_letters(secret_code, player_guess):
 
     total_letters = 0
     total_matching = 0
-    # This code was modified from ChatGBT to solve the problem with totaling the correct number of guessed letters
-    remaining_occurrences = {letter: secret_code.count(letter) for letter in secret_code}
+    # remaining_letters was modified
+    # with help from ChatGBT to solve the bug
+    # in totaling the correct number of guessed letters
+    remaining_letters = {
+        letter: secret_code.count(letter) for letter in secret_code
+    }
 
-    for a, b in zip(secret_code, player_guess):
-        if a == b:
+    for secret, guess in zip(secret_code, player_guess):
+        if secret == guess:
             total_matching += 1
-        
-        if b in secret_code and remaining_occurrences[b] > 0:
+
+        if guess in secret_code and remaining_letters[guess] > 0:
             total_letters += 1
-            remaining_occurrences[b] -= 1
+            remaining_letters[guess] -= 1
 
     if total_letters > 1:
         letter_plural = 'letters'
     else:
         letter_plural = 'letter'
-    
+
     if secret_code != player_guess:
-        position_message = f"You have {total_matching} {letter_plural} in the correct position"
-        totalletters_message = f"You have {total_letters} correct {letter_plural} in your guess!"    
-        print(stylize(position_message, fg('green')))
-        print(stylize(totalletters_message, fg('green')))
+        position_message = (
+            f"{total_matching} {letter_plural} in the correct position"
+        )
+        total_message = (
+            f"Total of {total_letters} correct {letter_plural}!\n"
+        )
+        print()
+        print(stylize(position_message, fg('light_goldenrod_2c')))
+        print(stylize(total_message, fg('light_cyan')))
     else:
         print()
-        
-    return total_letters, total_matching 
-   
+
+    return total_letters, total_matching
+
+
 def updates_tries_left(secret_code):
     """
-    Updates the number of tries remaining after each guess has been entered.
+    Updates the number of tries after each guess has been entered.
+    Prints games messages.
     """
-    try_count = 2
-    if try_count > 1:
-        guess_plural = 'guesses'
-    else:
-        guess_plural = 'guess'
+    try_count = 10
+    guess_plural = 'guesses'
+
     while try_count > 0:
         player_guess = get_player_guess()
         total_letters(secret_code, player_guess)
 
         if player_guess == secret_code:
-            try_count -= 1
-            end_message = f'😄 Great job you cracked the code: {", ".join(secret_code)} in {(10 - try_count)} {guess_plural} 😄!!!  '
+            try_count = 10 - (try_count - 1)
+            end_message = (
+                f'😄 🎆 Congratulation 🎆 🥳!!',
+                f'Here is the secret code: {", ".join(secret_code)} 😄!!!'
+            )
             print(stylize(end_message, bg('green')))
             break
+
         else:
             try_count -= 1
-            count_left_msg = f'{try_count} {guess_plural} left!'
-            print(stylize(count_left_msg, fg("red")))
-            print(f'Last guess { player_guess}')
+            count_left_msg = f'{try_count} {guess_plural} left!\n'
+            previous_guess = f'Previous guess:  {", ".join(player_guess)}\n'
+            print(stylize(count_left_msg, fg("dark_sea_green_1")))
+            print(stylize(previous_guess, bg('white')))
             player_guess.clear()
 
     else:
-        end_message = 'Out of guesses 🎆 💣 🤯. Better luck next time!'
+        end_message = (
+            '🤯 💣 Out of guesses 💣 🤯!! Better luck next time!'
+        )
         print(stylize(end_message, bg('red')))
- 
+        print('Try again?')
+
+
+def play_again():
+    """
+    Gets input value if user wants to contiune to play the game.
+    """
+    global difficulty
+    play_input = input('Play again? Y/N: ').upper()
+
+    if play_input == "Y":
+        difficulty = get_difficulty_input()
+        return True
+    else:
+        end_message = f' 😀 Thank you for playing. GOOD BYE! 👋'
+        print(stylize(end_message, bg('dark_blue')))
+        return False
+
+
+def main():
+    """
+    Runs mastermind game functions.
+    """
+    global difficulty
+
+    while True:
+        secret_code = secret_generated_code(difficulty)
+        if secret_code:
+            print(secret_code)
+            updates_tries_left(secret_code)
+            if not play_again():
+                break
+
 
 game_instruction()
 difficulty = get_difficulty_input()
-def main():
-    global difficulty    
-    secret_code = secret_generated_code(difficulty)
-    message  = f"Difficlty level: {difficulty.capitalize()}" 
-    if secret_code:
-        print(secret_code)
-        print(stylize(message, fg('blue')))
-        updates_tries_left(secret_code)
+
+
 main()
