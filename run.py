@@ -210,9 +210,8 @@ def updates_tries_left(secret_code):
         end_message = (
             f'🤯 💣 Out of guesses 💣 🤯!! Better luck next time!'
         )
-        print(f"\nSecret Code: {stylize(display_secret_code, fg('red'))}")
+        print(f"\nSecret Code was: {stylize(display_secret_code, fg('red'))}")
         print(stylize(end_message, bg('red')))
-        print('Try again?')
 
 
 def play_again():

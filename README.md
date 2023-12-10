@@ -65,7 +65,7 @@ Play Mastermind: [MasterMind](https://master-mind-748a02ac12ee.herokuapp.com/)
 - End of game message if player solves the sercret code.
 - With option to play again.
 
-<img src= "./assets/screenshots/code_solved.png" width=600 height=75>
+<img src= "./assets/screenshots/code_solved.png" width=600 height=300>
 
 - Display message player runs out of tries before secret code is solved.
 - Good bye message if player choosed to not play again.
