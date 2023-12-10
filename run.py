@@ -82,7 +82,7 @@ def get_player_guess():
     """
     global player_guess
 
-    input_message = "Enter your guess here: "
+    input_message = "Enter your guess here: ".upper()
     player_input = str(input(stylize(input_message, fg('yellow'))).upper())
     string_list = player_input.split(",")
     player_guess = string_list
@@ -115,7 +115,7 @@ def guess_input_validation(players_guess, difficulty):
                         raise TypeError
             except TypeError as e:
                 value_error_msg = (
-                    f"{e} You can only enter the letters: Z, X, C, V, and B!\n"
+                    f"\n{e} You can only enter the letters: Z, X, C, V, and B!"
                 )
                 print(stylize(value_error_msg, bg('red')))
                 return get_player_guess()
@@ -185,32 +185,33 @@ def updates_tries_left(secret_code):
     """
     try_count = 10
     guess_plural = 'guesses'
-
+    display_secret_code = ", ".join(secret_code)
     while try_count > 0:
         player_guess = get_player_guess()
         total_letters(secret_code, player_guess)
-
+        
         if player_guess == secret_code:
             try_count = 10 - (try_count - 1)
-            end_message = (
+            win_message = (
                 f'😄 🎆 Congratulation 🎆 🥳!!',
-                f'Here is the secret code: {", ".join(secret_code)} 😄!!!'
+                f'You solved the code: {display_secret_code} 😄!!!'
             )
-            print(stylize(end_message, bg('green')))
+            print(stylize(win_message, bg('green')))
             break
 
         else:
             try_count -= 1
             count_left_msg = f'{try_count} {guess_plural} left!\n'
-            previous_guess = f'Previous guess:  {", ".join(player_guess)}\n'
+            previous_guess = f'\nPrevious guess:  {", ".join(player_guess)}'
             print(stylize(count_left_msg, fg("dark_sea_green_1")))
             print(stylize(previous_guess, bg('white')))
             player_guess.clear()
 
     else:
         end_message = (
-            '🤯 💣 Out of guesses 💣 🤯!! Better luck next time!'
+            f'🤯 💣 Out of guesses 💣 🤯!! Better luck next time!'
         )
+        print(f"\nSecret Code: {stylize(display_secret_code, fg('red'))}")
         print(stylize(end_message, bg('red')))
         print('Try again?')
 
@@ -240,7 +241,6 @@ def main():
     while True:
         secret_code = secret_generated_code(difficulty)
         if secret_code:
-            print(secret_code)
             updates_tries_left(secret_code)
             if not play_again():
                 break
