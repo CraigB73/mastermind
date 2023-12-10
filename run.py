@@ -29,7 +29,7 @@ def get_difficulty_input():
     level_values = ['easy', 'normal', 'expert']
 
     while True:
-        input_message = "Enter you difficulty level: "
+        input_message = "Enter you difficulty level: \n"
         player_input = str(input(stylize(input_message, fg("green"))))
 
         try:
@@ -82,7 +82,7 @@ def get_player_guess():
     """
     global player_guess
 
-    input_message = "Enter your guess here: ".upper()
+    input_message = "Enter your guess here: \n".upper()
     player_input = str(input(stylize(input_message, fg('yellow'))).upper())
     string_list = player_input.split(",")
     player_guess = string_list
@@ -204,7 +204,7 @@ def updates_tries_left(secret_code):
             count_left_msg = f'{try_count} {guess_plural} left!\n'
             previous_guess = f'\nPrevious guess:  {", ".join(player_guess)}'
             print(stylize(count_left_msg, fg("dark_sea_green_1")))
-            print(stylize(previous_guess, bg('white')))
+            print(stylize(previous_guess, bg('light_blue')))
             player_guess.clear()
 
     else:
@@ -222,7 +222,7 @@ def play_again():
     """
     global difficulty 
      
-    play_input = input('Play again? Y/N: ').upper()
+    play_input = input('Play again? Y/N: \n').upper()
 
     if play_input == "Y":
         difficulty = get_difficulty_input()
