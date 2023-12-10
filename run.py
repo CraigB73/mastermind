@@ -54,7 +54,7 @@ def secret_generated_code(difficulty):
     Checks the value of difficulty input inorder to create random game code.
     """
     local_code_list = CODE_LIST
-    # Generates a random code with length depending on difficulty
+    # Generates a random code with length depending on difficulty input
     generated_code = [
         random.choice(local_code_list) for _ in range(len(local_code_list))
     ]
@@ -93,7 +93,7 @@ def get_player_guess():
 
 def guess_input_validation(players_guess, difficulty):
     """
-    Validates player input against computers generate game code.
+    Validates player input against computers generate secret code.
     Validates player has entered only the lettes available to the game.
     Validates that the list length is equal to chosen diffculty level.
     """
@@ -143,8 +143,8 @@ def total_letters(secret_code, player_guess):
     total_letters = 0
     total_matching = 0
     # remaining_letters was modified
-    # with help from ChatGBT to solve the bug
-    # in totaling the correct number of guessed letters
+    # with help from ChatGBT and geeksforgeeks.org to solve the bug
+    # in updating the total_letters values correctly.
     remaining_letters = {
         letter: secret_code.count(letter) for letter in secret_code
     }
@@ -220,7 +220,8 @@ def play_again():
     """
     Gets input value if user wants to contiune to play the game.
     """
-    global difficulty
+    global difficulty 
+     
     play_input = input('Play again? Y/N: ').upper()
 
     if play_input == "Y":
@@ -247,7 +248,7 @@ def main():
 
 
 game_instruction()
-difficulty = get_difficulty_input()
+difficulty = get_difficulty_input() # Used as a global variable.
 
 
 main()
