@@ -40,7 +40,7 @@ def get_difficulty_input():
                 return player_input.lower()
             else:
                 value_error_msg = (
-                    "Make sure to enter: easy, normal, or expert.\n"
+                    "Make sure to enter: easy, normal, or expert."
                 )
                 raise ValueError(stylize(value_error_msg, bg('yellow')))
 
@@ -192,10 +192,9 @@ def updates_tries_left(secret_code):
         
         if player_guess == secret_code:
             try_count = 10 - (try_count - 1)
-            win_message = (
-                f'😄 🎆 Congratulation 🎆 🥳!!',
-                f'You solved the code: {display_secret_code} 😄!!!'
-            )
+            congrats_msg = text2art("Congratulation!", chr_ignore=True)
+            win_message = f'You solved the code: {display_secret_code} 😄!!!'
+            print(stylize(congrats_msg, fg('magenta')))
             print(stylize(win_message, bg('green')))
             break
 

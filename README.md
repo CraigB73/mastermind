@@ -6,8 +6,9 @@
 
 There are three levels of difficulty. Each level increases the length of the secret code by one letter. Starting with the easy level having only a 3 letter code to solve. Every player will have 10 tries to solve the code. See if you can solve the code before your tries run out.
 
-![Alt text]("screen shoot fo mock display")
+<div align="center"><img src= "./assets/screenshots/mock_master.png" width=700 height=500></div>
 
+Play Mastermind: [MasterMind](https://master-mind-748a02ac12ee.herokuapp.com/)
 
 ## Table of Content 
 
@@ -45,30 +46,21 @@ There are three levels of difficulty. Each level increases the length of the sec
 
 <img src= "./assets/screenshots/header.png" width=600 height=300>
 
-- Input validation  
-  - A reminder will display if you do not enter the correct value.
-
-<img src= "./assets/screenshots/diff_val.png" width=600 height=75>
 
 - Secret code is genterated with the letters state in the instruction once you enter you difficulty level. 
+- Displays you play level 
 - Ask for your first guess. 
 
 
-<img src= "./assets/screenshots/diff.png" width=600 height=75>
-
-- Guess Input and Validation
-  - Enter your guess.
-  - Eror message if you do not enter guess correctly  
+<img src= "./assets/screenshots/diff.png" width=600 height=300>
 
 
-<img src= "./assets/screenshots/enter_guess.png" width=600 height=75>
-<img src= "./assets/screenshots/guess_val.png" width=600 height=75>
 
 - Displays number of letters in the correct position.
 - Displays number of correct letters guessed.
 - Diplays previous guess.
 
-<img src= "./assets/screenshots/update_total.png" width=600 height=100>
+<img src= "./assets/screenshots/enter_guess.png" width=600 height=300>
 
 - End of game message if player solves the sercret code.
 - With option to play again.
@@ -76,14 +68,18 @@ There are three levels of difficulty. Each level increases the length of the sec
 <img src= "./assets/screenshots/code_solved.png" width=600 height=75>
 
 - Display message player runs out of tries before secret code is solved.
-
-<img src= "./assets/screenshots/code_notsolved.png" width=600 height=175>
-
 - Good bye message if player choosed to not play again.
 
 
 <img src= "./assets/screenshots/No.png" width=600 height=100>
 
+
+- Input validation  
+  - Incorrect for difficult level 
+  - Incorrect input for available letters
+  
+<img src= "./assets/screenshots/diff_val.png" width=600 height=75>
+<img src= "./assets/screenshots/guess_val.png" width=600 height=75>
 
 ## Data Model 
 
