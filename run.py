@@ -5,7 +5,6 @@ from colored import fg, bg, stylize
 CODE_LIST = ['Z', 'X', 'C', 'V', 'B']
 player_guess = []
 
-
 def game_instruction():
     """
     Converts game logo to ACSII and print to console.
